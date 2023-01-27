@@ -1,6 +1,5 @@
 package com.example.restdemo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,21 +60,33 @@ class RestApiDemoController {
 		this.coffeeRepository = coffeeRepository;
 	}
 
+	/* GET-ting - retrieve all elements
+	 * Retrieves all elements present.
+	 */
 	@GetMapping
 	Iterable<Coffee> getCoffees() {
 		return coffeeRepository.findAll();
 	}
 
+	/* GET-ting - retrieve an element by id
+	 * Retrieves element with match Id.
+	 */
 	@GetMapping("/{id}")
 	Optional<Coffee> getCoffeeById(@PathVariable String id) {
 		return coffeeRepository.findById(id);
 	}
 
+	/* POST-ting - create an object and add it to the list
+	 * Services receives specified object details, and adds it to the list/database.
+	 */
 	@PostMapping
 	Coffee postCoffee(@RequestBody Coffee coffee) {
 		return coffeeRepository.save(coffee);
 	}
 
+	/* PUT-ting - update existing object
+	 * Uses Id to update object's details. If object does not exist - creates it.
+	 */
 	@PutMapping("/{id}")
 	ResponseEntity<Coffee> putCoffee(@PathVariable String id,
 									 @RequestBody Coffee coffee) {
@@ -85,6 +96,7 @@ class RestApiDemoController {
 				: new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED);
 	}
 
+	// DELETE - delete element specified by ID.
 	@DeleteMapping("/{id}")
 	void deleteCoffee(@PathVariable String id) {
 		coffeeRepository.deleteById(id);

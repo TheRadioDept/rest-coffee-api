@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,12 @@ public class RestDemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestDemoApplication.class, args);
 	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "droid")
+	Droid createDroid() {
+		return new Droid();
+	}
 }
 
 @Component
@@ -48,6 +55,40 @@ class DataLoader {
 	private void loadData() {
 		coffeeRepository.saveAll(List.of(new Coffee("Café Cereza"), new Coffee("Café Ganador"),
 				new Coffee("Café Lareño"), new Coffee("Café Três Pontas")));
+	}
+}
+
+//Potential Third-Party Option
+
+class Droid {
+	private String id, description;
+
+	public String getId() {
+		return id;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+}
+
+@RestController
+@RequestMapping("/droid")
+class DroidController {
+	private final Droid droid;
+
+	public DroidController(Droid droid) {
+		this.droid = droid;
+	}
+
+	@GetMapping
+	Droid getDroid() {
+		return droid;
 	}
 }
 
